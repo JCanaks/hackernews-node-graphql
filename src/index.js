@@ -1,51 +1,44 @@
 import { GraphQLServer } from 'graphql-yoga';
-
-let links = [{
-    id: 'link-0',
-    url: 'www.howtographql.com',
-    description: 'Fullstack tutorial for GraphQL'
-}];
-
-let idCount = links.length;
+import { prisma } from './generated/prisma-client';
 
 const resolvers = {
     Query: {
         info: () => 'This is the API of a Hackernews Clone',
-        feed: () => links,
-        link: (parent, args) => links.find(link => link.id === args.id)
+        feed: (root, args, context, info) => context.prisma.links(),
+        link: (parent, args, context) => context.prisma.link({
+            id: args.id,
+        })
     },
     Mutation: {
-        post: (parent, args) => {
-            const link = {
-                id: `link-${idCount++}`,
-                description: args.description,
-                url: args.url,
-            };
-            links.push(link);
-            return link;
+        post: (root, args, context) => context.prisma.createLink({
+            url: args.url,
+            description: args.description,
+        }),
+        updateLink: async (root, args, context) => {
+            const currentLink = await context.prisma.link({
+                id: args.id,
+            });
+            return context.prisma.updateLink({
+                data: {
+                    url: args.url ? args.url : currentLink.url,
+                    description: args.description ? args.description : currentLink.description,
+                },
+                where: {
+                    id: args.id
+                }
+            });
         },
-        updateLink: (parent, args) => {
-            const currentLink = links.find(link => link.id === args.id);
-            const currentLinkIndex = links.findIndex(link => link.id === args.id);
-            const updatedLink = {
-                ...currentLink,
-                url: args.url ? args.url : currentLink.url,
-                description: args.description ? args.description: currentLink.description,
-            };
-            
-            links.splice(currentLinkIndex, 1, updatedLink);
-            return updatedLink;
-        },
-        deleteLink: (parent, args) => {
-            const link = links.find(link => link.id === args.id);
-            const linkIndex = links.findIndex(link => link.id === args.id);
-            links.splice(linkIndex, 1);
-            return link;
-        }
+        deleteLink: (root, args, context) => context.prisma.deleteLink({
+            id: args.id
+        })
     }
 }
 
-const server = new GraphQLServer({ typeDefs: './src/schema.graphql', resolvers });
+const server = new GraphQLServer({
+    typeDefs: './src/schema.graphql',
+    resolvers,
+    context: { prisma },
+});
 
 // eslint-disable-next-line no-console
 server.start(() => console.log('Server is running on http://localhost:4000'));
