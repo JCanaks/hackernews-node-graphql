@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import getUserId  from '../utils';
+import getUserId from '../utils';
 
 const { APP_SECRET } = process.env;
 
@@ -67,10 +67,30 @@ const deleteLink = (parent, args, context) => {
     });
 }
 
+const vote = async (parent, args, context, info) => {
+    const userId = getUserId(context);
+    
+    //Check if the user has already voted for the link specified
+    const linkExists = await context.prisma.$exists.vote({
+        user: { id: userId },
+        link: { id: args.linkId }
+    });
+
+    if (linkExists) {
+        throw new Error(`Already voted for link: ${args.linkId}`)
+    }
+
+    return context.prisma.createVote({
+        user: { connect: { id: userId } },
+        link: { connect: { id: args.linkId } },
+    });
+}
+
 export default {
     signup,
     login,
     post,
     updateLink,
-    deleteLink
+    deleteLink,
+    vote,
 }
