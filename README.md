@@ -9,7 +9,7 @@ This is a GraphQL Application that was build based on the [GraphQL.js tutorial](
 * [Node](https://nodejs.org/)
 
 ## Setup
-The following steps can be taken to setup this applcation locally. 
+The following steps can be taken to setup this appllication locally. 
 ##### 1. Clone the Repository
 ```
 git clonehttps://github.com/JCanaks/hackernews-node-graphql.git
