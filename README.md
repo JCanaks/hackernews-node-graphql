@@ -1,5 +1,5 @@
 # Hackernews Application
-This is a GraphQL Application that was build based on the [GraphQL.js tutorial](https://www.howtographql.com/graphql-js/0-introduction/) on the [How to GraphQL](https://www.howtographql.com/) Website. This project is a GraphQL API designed for a [Hacker News](https://news.ycombinator.com/) clone ( i.e the API is designed for an application with similar features as the Hacker News). Users can view a feed of links to various resources along with a description of what the links entails. In this application Complete CRUD (CREATE , READ, UPDATE and DELETE) actions can be performed on the links by loggedin users.
+This is a GraphQL Application that was build based on the [GraphQL.js tutorial](https://www.howtographql.com/graphql-js/0-introduction/) on the [How to GraphQL](https://www.howtographql.com/) Website. This project is a GraphQL API designed for a [Hacker News](https://news.ycombinator.com/) clone ( i.e the API is designed for an application with similar features as the Hacker News). Users can view a feed of links to various resources along with a description of what the links entails. In this application Complete CRUD (CREATE , READ, UPDATE and DELETE) actions can be performed on the links by logged-in users.
 
 
 ## Tecnologies Used 
